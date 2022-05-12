@@ -1,6 +1,6 @@
 // Esta es la base de datos de nuestros usuarios
-const baseDeDatos = {
-  usuarios: [
+const database = {
+  users: [
     {
       id: 1,
       name: "Steve Jobs",
@@ -27,6 +27,77 @@ const baseDeDatos = {
     },
   ],
 };
+
+window.onload = function () {
+
+  
+  const emailField = document.getElementById("email-input");
+  const passwordField = document.getElementById("password-input");
+  const loginButton = document.querySelector("button.login-btn");
+
+  loginButton.onclick = () => {
+
+    login(emailField.value, passwordField.value);
+  }
+}// <---- END OF ONLOAD
+
+
+
+function login(email, password) {
+  const errorContainer = document.getElementById("error-container");
+  const infoContainer = document.getElementById("loader");
+  infoContainer.classList.remove("hidden");
+  const form = document.getElementById("form");
+  
+  setTimeout(() => {
+    const loginStatus = validateInfo(email, password);
+
+    if (loginStatus) {
+      form.classList.add("hidden");
+      document.querySelector("h1").textContent = "Welcome to the website"
+
+    } else {
+      infoContainer.classList.add("hidden");
+      errorContainer.classList.remove("hidden");
+      errorContainer.textContent = "Some of the data you entered is incorrect"
+      
+    }
+
+  }, 3000)
+
+
+}
+
+function validateEmailFormat(email) {
+  if (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)) {
+    return true;
+
+  } else {
+    return false;
+  }
+
+}
+
+function validatePasswordFormat(password) {
+  if (/^[A-Za-z0-9]{5,10}$/.test(password)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function validateInfo(email, password) {
+  const validEmail = validateEmailFormat(email);
+  const validPassword = validatePasswordFormat(password)
+  const userExist = database.users.find(user => user.email === email && user.password === password);
+  if (validEmail && validPassword && userExist) {
+    return true;
+  } else {
+    return false;
+  }
+
+}
+
 
 // ACTIVIDAD
 
