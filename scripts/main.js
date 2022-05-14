@@ -42,7 +42,7 @@ window.onload = function () {
  
   logoutButton.onclick = () => {
     localStorage.removeItem("sessionToken");
-    location.assign("./login.html");
+    location.assign("./index.html");
   }
 
   
