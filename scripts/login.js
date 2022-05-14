@@ -27,40 +27,66 @@ const database = {
     },
   ],
 };
+const emailField = document.getElementById("email-input");
+const passwordField = document.getElementById("password-input");
+const loginButton = document.querySelector("button.login-btn");
 
 window.onload = function () {
 
-  
-  const emailField = document.getElementById("email-input");
-  const passwordField = document.getElementById("password-input");
-  const loginButton = document.querySelector("button.login-btn");
 
+
+
+  
+
+  sessionChecker()
+ 
   loginButton.onclick = () => {
 
     login(emailField.value, passwordField.value);
   }
 }// <---- END OF ONLOAD
 
+function sessionChecker(){
+  if(localStorage.getItem("sessionToken") != null){
+    location.assign("./main.html");
+  };
+}
 
+function sessionTokenGenerator(){
+  let sessionID = Math.floor(Math.random() * 1000000); 
+  sessionToken ={
+    id: sessionID,
+    email: emailField.value,
+    name: database.users.find(user => user.email === emailField.value).name,
+    }
+  localStorage.setItem("sessionToken", JSON.stringify(sessionToken));
+  }
 
 function login(email, password) {
   const errorContainer = document.getElementById("error-container");
   const infoContainer = document.getElementById("loader");
   infoContainer.classList.remove("hidden");
   const form = document.getElementById("form");
-  
+
   setTimeout(() => {
     const loginStatus = validateInfo(email, password);
 
     if (loginStatus) {
+      sessionTokenGenerator();
       form.classList.add("hidden");
-      document.querySelector("h1").textContent = "Welcome to the website"
+      let h1 = document.querySelector("h1")
+      h1.innerHTML = "Welcome " + database.users.find(user => user.email === email).name;
+     
+      setTimeout(() => {
+        location.assign("./main.html");
+
+      }, 2500)
 
     } else {
       infoContainer.classList.add("hidden");
       errorContainer.classList.remove("hidden");
       errorContainer.textContent = "Some of the data you entered is incorrect"
-      
+
     }
 
   }, 3000)
